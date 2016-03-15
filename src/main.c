@@ -24,7 +24,7 @@ typedef struct _vertex {
 	int distanceFromSource;
 } Vertex;
 
-void print_vertex(Vertex* v);
+void 	print_vertex(Vertex* v);
 
 typedef struct _adjacencyList {
 	int vertexValue;
@@ -72,14 +72,24 @@ int main(int argc, char* argv[])
 	int vertexCount	= -1;
 	int edgeCount 	= -1;
 	
+	//	Pull the graph information out of the input file and use that data
+	//	to populated the Edge and Vertex 'arrays'
 	get_graph_information(argv[1], &edges, &vertices, &vertexCount, &edgeCount);	
 
+	//	Use the Edge and Vertex 'arrays' to contruct adjacency lists for each
+	//	vertex
 	construct_adjacency_lists(edgeCount, edges, vertexCount, vertices, &adjLists);
 
+	//	Run the Breadth First Search algorithm on the graph information obtained
+	//	by the previous two functions
 	bfs( SOURCE_VERTEX , vertexCount, vertices, adjLists);
 	
+	//	Print out the vertex information (vertex value & distance from source) to
+	//	stdout in the manner described in the assignment document
 	final_print(vertexCount, vertices);
 		
+		
+	//	Free any memory allocated
 	cleanup(vertexCount, edgeCount, edges, vertices, adjLists);
 }
 
