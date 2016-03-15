@@ -24,11 +24,17 @@ typedef struct _vertex {
 	int distanceFromSource;
 } Vertex;
 
+void print_vertex(Vertex* v);
+
 typedef struct _adjacencyList {
 	int vertexValue;
 	int size;
 	int* data;
 } AdjacencyList;
+
+void	free_adjacencyList(AdjacencyList* al);
+
+
 
 typedef struct _vertexStack {
 	Vertex**	data;
@@ -41,6 +47,7 @@ bool	is_empty_vertex_stack(VertexStack* vs);
 void	push_vertex_stack(VertexStack* vs, Vertex* v);
 Vertex*	pop_vertex_stack(VertexStack* vs);
 void	print_info_stack(VertexStack* vs);
+void	free_vertex_stack(VertexStack* vs);
 
 /*
 	FUNCTION PROTOTYPES
@@ -50,44 +57,30 @@ void	print_info_stack(VertexStack* vs);
 void	get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, int* vertexCount, int* edgeCount);
 void	construct_adjacency_lists(int edgeCount, Edge** edges, int vertexCount, Vertex** vertices, AdjacencyList*** adjacencyLists);
 void	bfs(int sourceVertex, int vertexCount, Vertex** vertices, AdjacencyList** adjacencyLists);
+void	final_print(int vertexCount, Vertex** vertices);
 void	cleanup(int vertexCount, int edgeCount, Edge** edges, Vertex** vertices, AdjacencyList** adjacencyLists);
 
-void print_vertex(Vertex* v);
+
 
 
 int main(int argc, char* argv[])
-{
-	
-	//	Remember to remove this hard-coded value and replace it with a
-	//	reference to the first(second?) input argument
-	char* input_filepath = "../data/input_test_1.grph";
-	
-	
-	//	Pull the information from the graph input file
+{		
+	//	Declare the main variables to be used throughout the program
 	Edge** 				edges;
 	Vertex** 			vertices;
 	AdjacencyList**		adjLists;
 	
-	int vertexCount = -1;
-	int edgeCount = -1;
+	int vertexCount	= -1;
+	int edgeCount 	= -1;
 	
-	get_graph_information(input_filepath, &edges, &vertices, &vertexCount, &edgeCount);	
+	get_graph_information(argv[1], &edges, &vertices, &vertexCount, &edgeCount);	
 
 	construct_adjacency_lists(edgeCount, edges, vertexCount, vertices, &adjLists);
 
-	bfs( SOURCE_VERTEX, vertexCount, vertices, adjLists);
+	bfs( SOURCE_VERTEX , vertexCount, vertices, adjLists);
 	
-	
-	int i = 0;
-	
-	for (i = 0; i < vertexCount; i++)
-	{
-		Vertex* current_vertex = vertices[i];
+	final_print(vertexCount, vertices);
 		
-		print_vertex(current_vertex);
-	}
-	printf("\n");
-	
 	cleanup(vertexCount, edgeCount, edges, vertices, adjLists);
 }
 
@@ -165,6 +158,11 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 	
 	if (did_find_edge == true)
 		*edgeCount = edge_index;	
+		
+		
+	//	Close the file
+	
+	
 }
 
 void construct_adjacency_lists(int edgeCount, Edge** edges, int vertexCount, Vertex** vertices, AdjacencyList*** adjacencyLists)
@@ -275,7 +273,20 @@ void bfs(int sourceVertex, int vertexCount, Vertex** vertices, AdjacencyList** a
 		}
 	}
 }
-void	cleanup(int vertexCount, int edgeCount, Edge** edges, Vertex** vertices, AdjacencyList** adjacencyLists)
+void final_print(int vertexCount, Vertex** vertices)
+{
+	//	Iterate through all the vertices and print them out in the format
+	//	specified in the instruction document
+	int i;
+	
+	for (i = 0; i < vertexCount; i++)
+	{
+		Vertex* current_vertex = vertices[i];
+		
+		printf("%d %d\n", current_vertex->value, current_vertex->distanceFromSource);
+	}
+}
+void cleanup(int vertexCount, int edgeCount, Edge** edges, Vertex** vertices, AdjacencyList** adjacencyLists)
 {
 	//	First free all the individual vertices
 	int i;
@@ -292,8 +303,7 @@ void	cleanup(int vertexCount, int edgeCount, Edge** edges, Vertex** vertices, Ad
 	
 	for (i = 0; i < vertexCount; i++)
 	{
-		free(adjacencyLists[i]->data);
-		free(adjacencyLists[i]);
+		free_adjacencyList(adjacencyLists[i]);
 	}
 	
 	//	Free all the AdjacencyList pointers that were allocated
@@ -363,8 +373,24 @@ void print_info_stack(VertexStack* vs)
 	}
 }
 
+
+
 /*
-	UTILITY FUNCTIONS
+	Adjacency List Functions
+*/
+void free_adjacencyList(AdjacencyList* al)
+{
+	if (al != NULL)
+	{
+		if (al->data != NULL)
+			free(al->data);
+		
+		free(al);
+	}
+}
+
+/*
+	Vertex Functions
 */
 void print_vertex(Vertex* v)
 {
