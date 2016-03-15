@@ -86,66 +86,6 @@ int main(int argc, char* argv[])
 	
 	
 	
-	
-	VertexStack test_stack;
-	
-	init_vertex_stack(&test_stack);
-	
-	if (is_empty_vertex_stack(&test_stack) == true)
-	{
-		printf("\nThe stack is empty\n");
-	}
-	else
-	{
-		printf("\nThe stack apparently has some values in it...\n");
-	}
-	
-	push_vertex_stack(&test_stack, vertices[0]);
-	
-	if (is_empty_vertex_stack(&test_stack) == true)
-	{
-		printf("\nThe stack is empty\n");
-	}
-	else
-	{
-		printf("\nThe stack apparently has some values in it...\n");
-	}
-	
-	printf("\nAbout to pop some stuff\n");
-	
-	Vertex* testing = pop_vertex_stack(&test_stack);
-	
-	if (testing == NULL)
-	{
-		printf("\nThe value popped off was null...\n");
-	}
-	else
-	{
-		print_vertex(testing);
-	}
-	
-	if (is_empty_vertex_stack(&test_stack) == true)
-	{
-		printf("\nThe stack is empty\n");
-	}
-	else
-	{
-		printf("\nThe stack apparently has some values in it...\n");
-	}
-	
-	
-/*
-	AdjacencyList* temp_list = adjLists[0];
-	
-	int i = 0;
-	
-	printf("\nThe following is the adjacency list for vertex %d\n\n", temp_list->vertexValue);
-	
-	for (i = 0; i < temp_list->size; i++)
-	{
-		printf("\n%d", temp_list->data[i]);
-	}
-*/
 }
 
 
