@@ -78,14 +78,15 @@ int main(int argc, char* argv[])
 	bfs( SOURCE_VERTEX, vertexCount, vertices, adjLists);
 	
 	
+	int i = 0;
 	
-	
-	
-	
-	
-	
-	
-	
+	for (i = 0; i < vertexCount; i++)
+	{
+		Vertex* current_vertex = vertices[i];
+		
+		print_vertex(current_vertex);
+	}
+	printf("\n");
 }
 
 
@@ -215,6 +216,74 @@ void construct_adjacency_lists(int edgeCount, Edge** edges, int vertexCount, Ver
 }
 void bfs(int sourceVertex, int vertexCount, Vertex** vertices, AdjacencyList** adjacencyLists)
 {
+	//	Set the initial distances
+	
+	int i;
+	Vertex* source_vertex;
+	
+	for (i = 0; i < vertexCount; i++)
+	{
+		int vertex_value = i + 1;
+		
+		Vertex* current_vertex = vertices[i];
+		
+		if (current_vertex->value == sourceVertex)
+		{
+			current_vertex->distanceFromSource = 0;
+			source_vertex = current_vertex;
+		}
+		else
+		{
+			current_vertex->distanceFromSource = -1;
+		}
+	}
+	
+	
+	VertexStack bfs_stack;
+	
+	init_vertex_stack(&bfs_stack);
+	
+	push_vertex_stack(&bfs_stack, source_vertex);
+	
+	while(is_empty_vertex_stack(&bfs_stack) == false)
+	{
+		Vertex* current_vertex = pop_vertex_stack(&bfs_stack);
+		
+		int current_vertex_index = (current_vertex->value - 1);
+		
+		AdjacencyList* adj_list = adjacencyLists[current_vertex_index];
+		
+		//	Iterate through all the vertices in the adjacency list of the vertex
+		
+		int j = 0;
+		
+		for (j=0; j < adj_list->size; j++)
+		{
+			int adj_list_value = adj_list->data[j];
+			int adj_list_index_value = adj_list_value - 1;
+			
+			Vertex* adj_list_current_vertex = vertices[adj_list_index_value];
+			
+			if(adj_list_current_vertex->distanceFromSource == -1)
+			{
+				adj_list_current_vertex->distanceFromSource = current_vertex->distanceFromSource + 1;
+				push_vertex_stack(&bfs_stack, adj_list_current_vertex);
+			}
+				
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
 
@@ -248,7 +317,6 @@ void push_vertex_stack(VertexStack* vs, Vertex* v)
 		vs->data = realloc(vs->data, sizeof(Vertex*) * vs->capacity * 2);
 		vs->capacity *= 2;
 	}
-	print_vertex(v);
 	vs->data[vs->size] = v;
 	vs->size += 1;
 }
@@ -265,7 +333,7 @@ void print_info_stack(VertexStack* vs)
 {
 	if ( vs == NULL )
 	{
-		printf("\nThere's really nothing to print because the stack you gave me was null...\n")
+		printf("\nThere's really nothing to print because the stack you gave me was null...\n");
 	}
 	else
 	{
