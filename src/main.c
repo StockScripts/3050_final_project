@@ -47,7 +47,6 @@ bool	is_empty_vertex_stack(VertexStack* vs);
 void	push_vertex_stack(VertexStack* vs, Vertex* v);
 Vertex*	pop_vertex_stack(VertexStack* vs);
 void	print_info_stack(VertexStack* vs);
-void	free_vertex_stack(VertexStack* vs);
 
 /*
 	FUNCTION PROTOTYPES
@@ -319,14 +318,6 @@ void cleanup(int vertexCount, int edgeCount, Edge** edges, Vertex** vertices, Ad
 }
 
 
-
-
-
-
-
-
-
-
 /*
 	VERTEX STACK FUNCTIONS
 */
@@ -373,8 +364,6 @@ void print_info_stack(VertexStack* vs)
 	}
 }
 
-
-
 /*
 	Adjacency List Functions
 */
@@ -384,8 +373,6 @@ void free_adjacencyList(AdjacencyList* al)
 	{
 		if (al->data != NULL)
 			free(al->data);
-		
-		free(al);
 	}
 }
 
