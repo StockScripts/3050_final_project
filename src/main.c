@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 
 #include "../include/vector.h"
 #include "../input_error.h"
 
 #define VERTEX_QUEUE_INIT_SIZE 	256
 #define MAX_STRING_SIZE			512
-#define MAX_EDGE_COUNT			512
 #define SOURCE_VERTEX			1
 
 typedef enum {false, true} bool;
@@ -139,7 +139,7 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 	
 	
 	//	Allocate space for all the edge pointers
-	*edges = malloc( MAX_EDGE_COUNT * sizeof(Edge*));
+	*edges = malloc( UINT_MAX * sizeof(Edge*));
 	
 	//	Begin reading the edges from the file
 	int edge_index = 0;
