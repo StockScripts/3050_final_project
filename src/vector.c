@@ -75,6 +75,17 @@ void print_elements_vector(struct vector* v)
 		printf("\n\n");
 	}
 }
+void convert_to_static_int_array(struct vector* v, int** static_array)
+{
+	*static_array = malloc( v->size * sizeof(int));
+	
+	int i = 0;
+	
+	for (i = 0; i < v->size; i++)
+	{
+		(*static_array)[i] = access_element_vector(v,i);
+	}
+}
 
 void sort_elements_vector(struct vector* v)
 {

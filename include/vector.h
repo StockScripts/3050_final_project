@@ -27,5 +27,6 @@ void	insert_element_vector(struct vector* v, int element_to_insert);
 void	sort_elements_vector(struct vector* v);
 void	print_elements_vector(struct vector* v);
 void	free_vector(struct vector* v);
+void	convert_to_static_int_array(struct vector* v, int** static_array);
 
 #endif
