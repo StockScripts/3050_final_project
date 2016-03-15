@@ -50,7 +50,7 @@ void	print_info_stack(VertexStack* vs);
 void	get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, int* vertexCount, int* edgeCount);
 void	construct_adjacency_lists(int edgeCount, Edge** edges, int vertexCount, Vertex** vertices, AdjacencyList*** adjacencyLists);
 void	bfs(int sourceVertex, int vertexCount, Vertex** vertices, AdjacencyList** adjacencyLists);
-
+void	cleanup(int vertexCount, int edgeCount, Edge** edges, Vertex** vertices, AdjacencyList** adjacencyLists);
 
 void print_vertex(Vertex* v);
 
@@ -87,6 +87,8 @@ int main(int argc, char* argv[])
 		print_vertex(current_vertex);
 	}
 	printf("\n");
+	
+	cleanup(vertexCount, edgeCount, edges, vertices, adjLists);
 }
 
 
@@ -272,20 +274,40 @@ void bfs(int sourceVertex, int vertexCount, Vertex** vertices, AdjacencyList** a
 				
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
+void	cleanup(int vertexCount, int edgeCount, Edge** edges, Vertex** vertices, AdjacencyList** adjacencyLists)
+{
+	//	First free all the individual vertices
+	int i;
+	
+	for (i = 0; i < vertexCount; i++)
+	{
+		free(vertices[i]);
+	}
+	
+	//	Next free all the vertex pointers that were allocated
+	free(vertices);
+	
+	//	Free all the individual adjacency lists
+	
+	for (i = 0; i < vertexCount; i++)
+	{
+		free(adjacencyLists[i]->data);
+		free(adjacencyLists[i]);
+	}
+	
+	//	Free all the AdjacencyList pointers that were allocated
+	
+	free(adjacencyLists);
+	
+	for (i = 0; i < edgeCount; i++)
+	{
+		free(edges[i]);
+	}
+	
+	free(edges);
+}
+
 
 
 
