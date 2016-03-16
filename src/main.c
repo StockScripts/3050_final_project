@@ -197,7 +197,7 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 	if (fclose(graph_file) == 0)
 	{
 		//	FIX
-		printf("\nThe file was close successfully!\n");
+		printf("\nThe file was closed successfully!\n");
 	}
 	else
 	{
