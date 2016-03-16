@@ -177,6 +177,16 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 				valid_edge_read = false;
 		}
 		
+		//	Check to make sure the vertices on the edge are valid
+		if (valid_edge_read == true)
+		{
+			if (temp_edge_start < 1 || temp_edge_start > *vertexCount)
+				exit(INTEGER_IS_NOT_A_VERTEX);
+				
+			if (temp_edge_end < 1 || temp_edge_end > *vertexCount)
+				exit(INTEGER_IS_NOT_A_VERTEX);
+		}
+		
 		//	If the number of values read in from the file is equal to two
 		//	(the start and end values of a vertex) then you know you've 
 		//	found a valid edge and can use these values to create a new
