@@ -64,6 +64,11 @@ void	cleanup(int vertexCount, int edgeCount, Edge** edges, Vertex** vertices, Ad
 
 int main(int argc, char* argv[])
 {		
+	//	Make sure the number of input arguments to the program is corrent
+	if (argc != 2)
+		exit(INCORRECT_NUMBER_OF_COMMAND_LINE_ARGUMENTS);
+		
+	
 	//	Declare the main variables to be used throughout the program
 	Edge** 				edges;
 	Vertex** 			vertices;
