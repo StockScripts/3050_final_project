@@ -109,9 +109,7 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 	//	Check for some error when opening the file
 	if (graph_file == NULL)
 	{
-		//	FIX
-		printf("\nThere was an error opening the graph file\n");
-		exit(1);
+		exit(FILE_FAILED_TO_OPEN);
 	}
 	
 	//	Read in the first value as the vertex count
@@ -165,12 +163,25 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 		
 		int edge_ret_val = fscanf(graph_file, " (%d,%d)", &temp_edge_start, &temp_edge_end);
 		
+		bool valid_edge_read = true;
+		
+		//	Check to make sure that the line read in from the file represents
+		//		a valid edge. That is, it is formatted correctly and both 
+		//		integers are non-negative
+		if (edge_ret_val != 2)
+			valid_edge_read = false;
+			
+		if (valid_edge_read == true)
+		{
+			if (temp_edge_start < 0 || temp_edge_end < 0)
+				valid_edge_read = false;
+		}
 		
 		//	If the number of values read in from the file is equal to two
 		//	(the start and end values of a vertex) then you know you've 
 		//	found a valid edge and can use these values to create a new
 		//	edge struct
-		if (edge_ret_val == 2)
+		if (valid_edge_read)
 		{
 			//	For every edge allocate memory for the struct
 			//
@@ -191,6 +202,14 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 			if (did_find_edge == false)
 				did_find_edge = true;
 		}
+		else
+		{
+			//	FIX
+			//	- This checking doesn't really work. You may want
+			//		to fix it before your final submission
+			
+			//	exit(PARSING_ERROR_INVALID_FORMAT);
+		}
 	}
 	
 	
@@ -199,15 +218,8 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 		
 		
 	//	Close the file and check for errors when closing
-	if (fclose(graph_file) == 0)
-	{
-		//	FIX
-		printf("\nThe file was closed successfully!\n");
-	}
-	else
-	{
-		printf("\nThe file could not be closed...\n");
-	}
+	if (fclose(graph_file) != 0)
+		exit(FILE_FAILED_TO_CLOSE);
 	
 }
 
