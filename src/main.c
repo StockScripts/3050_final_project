@@ -101,7 +101,7 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 	
 	FILE *graph_file = fopen(filename, "r");
 	
-	//	Check the file for errors
+	//	Check for some error when opening the file
 	if (graph_file == NULL)
 	{
 		//	FIX
@@ -193,7 +193,7 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 		*edgeCount = edge_index;	
 		
 		
-	//	Close the file
+	//	Close the file and check for errors when closing
 	if (fclose(graph_file) == 0)
 	{
 		//	FIX
