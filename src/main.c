@@ -114,6 +114,9 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 	
 	int ret_val = fscanf(graph_file, "%d", &temp_vertex_count);
 	
+	//	Check if the return value from fscanf is 1 indicating that
+	//	1 value was read in from the file. If so then copy the value
+	//	that was read in into the variable 'vertexCount'
 	if (ret_val == 1)
 	{
 		*vertexCount = temp_vertex_count;
@@ -132,6 +135,11 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 	
 	for(vertex_index = 0; vertex_index < *vertexCount; vertex_index++)
 	{
+		//	For every vertex allocate memory for the struct
+		//	
+		//	Set the value of the vertex to the index value
+		//		and set the 'distanceFromSource' value to -1
+		//		indicating a distance of infinity from the source
 		(*vertices)[vertex_index] = malloc( sizeof(Vertex) );
 		(*vertices)[vertex_index]->value = vertex_index + 1;
 		(*vertices)[vertex_index]->distanceFromSource = -1;	
@@ -152,25 +160,49 @@ void get_graph_information(char* filename, Edge*** edges, Vertex*** vertices, in
 		
 		int edge_ret_val = fscanf(graph_file, " (%d,%d)", &temp_edge_start, &temp_edge_end);
 		
+		
+		//	If the number of values read in from the file is equal to two
+		//	(the start and end values of a vertex) then you know you've 
+		//	found a valid edge and can use these values to create a new
+		//	edge struct
 		if (edge_ret_val == 2)
 		{
+			//	For every edge allocate memory for the struct
+			//
+			//	Set the start and end values of the newly allocated
+			//	struct to the start and end values that were pulled
+			//	from the file
 			(*edges)[edge_index] = malloc( sizeof(Edge));
 			(*edges)[edge_index]->start = temp_edge_start;
 			(*edges)[edge_index]->end = temp_edge_end;
-			edge_index++;
 			
+			
+			//	Increment the edge index to keep track of how many
+			//	edges are being read in from the file
+			edge_index++;
+						
+						
+			//	Make sure to note if at least one edge was found
 			if (did_find_edge == false)
 				did_find_edge = true;
-			
 		}
 	}
+	
 	
 	if (did_find_edge == true)
 		*edgeCount = edge_index;	
 		
 		
 	//	Close the file
-	
+	if (fclose(graph_file) == 0)
+	{
+		//	FIX
+		printf("\nThe file was close successfully!\n");
+	}
+	else
+	{
+		printf("\nThe file could not be closed...\n");
+	}
 	
 }
 
