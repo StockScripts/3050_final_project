@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "input_error.h"
+#include "../input_error.h"
 #define MAX(a, b) (a)>(b)? (a):(b)
 struct day{
     int buy[3];
