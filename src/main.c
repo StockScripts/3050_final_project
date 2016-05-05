@@ -1,10 +1,8 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <limits.h>
-
-#include "../include/vector.h"
-#include "../input_error.h"
-
+#include "input_error.h"
+#define MAX(a, b) (a)>(b)? (a):(b)
 struct day{
     int buy[3];
     int sell[3];
@@ -44,7 +42,7 @@ struct day findMax(int *array,int n){
         if(array[a]-array[i]==max)
             b=i+1;
     }
-    printf("%d %d\n",a,b);
+    //printf("%d %d\n",a,b);
     day.buy[0]=b;
     day.sell[0]=a+1;
     day.extream=max;
@@ -53,128 +51,121 @@ struct day findMax(int *array,int n){
 }
 
 
-struct day findMax2(int *array,int n){
-    int diff[n-1];
-    int i, a,b;
-    int z,x,c;
-    int localMax;
-    struct day day;
-    struct day day1;
-    struct day day2;
-    struct day day3;
-    int *array1;
-    int temp[3];
-    day1.extream=0;
-    day2.extream=0;
-    day3.extream=0;
-    array1=malloc(sizeof(int)*(n));
-    for(i=0;i<n-1;i++){
-        diff[i]=array[i+1]-array[i];
+
+
+int maxProfit(int k, int* prices, int size)
+{
+    int i,j;
+    int **date;
+    int counter=0;
+    int q=0,w=1,e=0,r=1;
+    int a=0,s=1,d=0,f=1,g=0,h=1;
+    date = (int**)malloc(sizeof(int*)*(k));
+    for(int i = 0; i <= k; i++)
+    {
+        date[i] = (int*)malloc(sizeof(int)*size);
+        memset(date[i], 0, sizeof(int)*size);
     }
-    int max=diff[0];
-    int max2=diff[0];
-    for(i=1;i<n-1;i++){
-        if(diff[i-1]>0)
-            diff[i]=diff[i]+diff[i-1];
-        if(max<diff[i]){
-            max=diff[i];
-            a=i+1;
+    if(size < 2)
+        return 0;
+   if(k > size/2) //when it's unlimited, it can be easily handled -> corner case;
+    {
+        int profit = 0;
+        for(int i=1; i < size; i++)
+            if(prices[i] > prices[i-1])
+                profit += prices[i]-prices[i-1];
+        return profit;
+    }
+    int** t = (int**)malloc(sizeof(int*)*(k+1));
+    for(int i = 0; i <= k; i++)
+    {
+        t[i] = (int*)malloc(sizeof(int)*size);
+        memset(t[i], 0, sizeof(int)*size);
+    }
+    int cur = 0;
+    for(i=1; i <= k; i++)
+    {
+        cur = -prices[0];
+        for(j = 1; j < size; j++)
+        {   
+            t[i][j] = MAX(t[i][j-1], prices[j]+cur); //max profit sell at j;
+            cur = MAX(cur, t[i-1][j-1]-prices[j]); //max profit buy at j;
+            date[i][j]=cur;
+            printf("%d %d current %d\n",i,j,cur);
         }
+        counter++;
     }
-    for(i=0;i<n-1;i++){
-        if(array[a]-array[i]==max)
-            b=i;
-    } 
-    day.buy[0]=b+1;
-    day.sell[0]=a+1;
-    day.extream=max;
-    printf("the b is %d, a is %d\n",b,a);
-    if(b-1>1){
-        for(i=0;i<b;i++){
-        array1[i]=array[i];
+    for(i=0;i<k+1;i++){
+        for(j=0;j<size;j++){
+            
+            printf("%d  ",t[i][j]);
+        }
+        printf("\n");
     }
-        day1=findMax(array1,b);
+    for(i=0;i<k+1;i++){
+        for(j=0;j<size;j++){
+            
+            printf("date array %d  ",date[i][j]);
+        }
+        printf("\n");
     }
-    if(b-a>1){
-    for(i=b;i<a;i++){
-        array1[i]=array[i];
-    }
-        day2=findMin(array1,b-a);
-    }
-    if(n-a>1){
-    for(i=a;i<n-1;i++){
-        array1[i]=array[i];
-    }
-        day3=findMax(array1,n-a);
-    }
-        //if(day1.extream>day2.extream){
-        //    localMax=day1.extream;
-       // }
-        //else
-        //    localMax=day2.extream;
-        //if(day3.extream>localMax)
-        //    localMax=day3.extream;
-        temp[0]=0;
-        temp[1]=0;
-        temp[2]=0;
-        printf("qew %d %d %d\n",temp[0],temp[1],temp[2]);
-        printf("qew %d %d %d\n",day1.extream,day2.extream,day3.extream);
-        temp[0]=day1.extream;
-        temp[1]=day2.extream;
-        temp[2]=day3.extream;
-        localMax=temp[0];
-        printf("qew %d %d %d\n",temp[0],temp[1],temp[2]);
-        for(i=0;i<3;i++){
-            if(temp[i]>localMax)
-                localMax=temp[i];
+    int max=0;
+    int min=-99999;
+    int z=1,x=size;
+    for(i=0;i<size;i++){
+        if(max<t[1][i]){
+            max=t[1][i];
+            x=i;
         }
         
-        if(localMax==day1.extream){
-            day.buy[1]=day1.buy[0];
-            day.sell[1]=day1.sell[0];
-        }
-        else if(localMax==day2.extream){
-            day2.sell[1]=day.sell[0];
-            day.sell[0]=day2.buy[0];
-            day.buy[1]=day2.sell[0];
-            
-        }
-        else if(localMax==day3.extream){
-            day.buy[1]=day3.buy[0];
-            day.sell[1]=day3.sell[0];
-        }
-                
-        return day;
-    
-}
-struct day findMin(int *array,int n){
-    int diff[n-1];
-    int i, a,b;
-    struct day day;
-    for(i=0;i<n-1;i++){
-        diff[i]=array[i+1]-array[i];
     }
-    int min=diff[0];
-    for(i=1;i<n-1;i++){
-        if(diff[i-1]<0)
-            diff[i]=diff[i]+diff[i-1];
-        if(min>diff[i]){
-            min=diff[i];
-            a=i+1;
-            
+    for(i=0;i<x;i++){
+        if(date[1][i]!=date[1][i+1]){
+            z=i+1;
         }
     }
-    for(i=0;i<n-1;i++){
-        if(array[a]-array[i]==min)
-            b=i+1;
+    if(z==1){
+        z=0;
     }
-    //printf("%d\n",min);
-    day.buy[0]=b;
-    day.sell[0]=a+1;
-    day.extream=-min;
-    return day;
 
+    printf("date is %d %d\n",z+1,x+1);
+    if(t[k][size-1]==0)
+    printf("there is no result");
+    for(i=0;i<size;i++){
+        if(max<t[2][i]){
+            max=t[2][i];
+            q=i;
+        }
+    }
+    for(i=0;i<q;i++){
+        if(date[2][i]!=date[2][i+1]){
+            w=i+1;
+        }
+    }
+    max=0;
+    for(i=0;i<w;i++){
+        if(max<t[1][i]){
+            max=t[1][i];
+            e=i;
+        }
+        printf("%d\n",t[1][i]);
+    }
+    printf("r is %d\n",r);
+    for(i=1;i<w-1;i++){
+        if(date[1][i]!=date[1][i+1]){
+            r=i+1;
+        }
+        printf("%d\n",date[1][i]);
+    }
+    printf("r is %d\n",r);
+    if(r==1){
+        r=0;
+    }
+    printf("date is %d %d %d %d",q+1,w+1,e+1,r+1);
+     
+    return t[k][size-1];
 }
+
 
 int main(int argc,char *argv[])
 {
@@ -195,18 +186,19 @@ int main(int argc,char *argv[])
     }
     int *array;
     int r=100;
-    int n=6;
+    int n=9;
     int max,min;
     struct day day;
     array=malloc(sizeof(int)*(r+1));
  
     createArray(array,fp);
-    day=findMax(array,n);
-    printf("%d\n%d\n",day.buy[0],day.sell[0]);
-    day=findMin(array,n);
-    printf("%d\n%d\n",day.buy[0],day.sell[0]);
-    day=findMax2(array,n);
-    printf("%d\n%d\n%d\n%d\n",day.buy[0],day.sell[0],day.buy[1],day.sell[1]);
-
+    //day=findMax(array,n);
+    //printf("%d\n%d\n",day.buy[0],day.sell[0]);
+    //day=findMin(array,n);
+    //printf("%d\n%d\n",day.buy[0],day.sell[0]);
+    //day=findMax2(array,n);
+    //printf("%d\n%d\n%d\n%d\n",day.buy[0],day.sell[0],day.buy[1],day.sell[1]);
+    max=maxProfit(2,array,n);
+    printf("the max profit is %d",max);
     return 0;
 }
