@@ -3,7 +3,12 @@
 #include <string.h>
 #include "../input_error.h"
 #define MAX(a, b) (a)>(b)? (a):(b)
-
+struct day{
+    int buy[3];
+    int sell[3];
+    int extream;
+};
+struct day findMin(int *array,int n);
 void createArray(int *array,FILE *fp){
     int price;
     int i=0,j;
@@ -14,6 +19,37 @@ void createArray(int *array,FILE *fp){
         i++;
     }
 }
+
+struct day findMax(int *array,int n){
+    int diff[n-1];
+    int i, a,b;
+    struct day day;
+    for(i=0;i<n-1;i++){
+        diff[i]=array[i+1]-array[i];
+    }
+    int max=diff[0];
+    
+    for(i=1;i<n-1;i++){
+        if(diff[i-1]>0)
+            diff[i]=diff[i]+diff[i-1];
+        if(max<diff[i]){
+            max=diff[i];
+            a=i+1;
+            
+        }
+    }
+    for(i=0;i<n-1;i++){
+        if(array[a]-array[i]==max)
+            b=i+1;
+    }
+    //printf("%d %d\n",a,b);
+    day.buy[0]=b;
+    day.sell[0]=a+1;
+    day.extream=max;
+    return day;
+
+}
+
 
 
 
@@ -55,7 +91,7 @@ int maxProfit(int k, int* prices, int size)
             t[i][j] = MAX(t[i][j-1], prices[j]+cur); //max profit sell at j;
             cur = MAX(cur, t[i-1][j-1]-prices[j]); //max profit buy at j;
             date[i][j]=cur;
-            //printf("%d %d current %d\n",i,j,cur);
+            printf("%d %d current %d\n",i,j,cur);
         }
         counter++;
     }
@@ -126,97 +162,18 @@ int maxProfit(int k, int* prices, int size)
         r=0;
     }
     printf("date is %d %d %d %d",q+1,w+1,e+1,r+1);
-    for(i=0;i<size;i++){
-        if(max<t[3][i]){
-            max=t[3][i];
-            a=i;
-        }
-    }
-    for(i=0;i<a;i++){
-        if(date[3][i]!=date[3][i+1]){
-            s=i+1;
-        }
-    }
-        printf("s is %d",s);
-    for(i=0;i<size;i++){
-        if(max<t[3][i]){
-            max=t[3][i];
-            a=i;
-        }
-    }
-    for(i=0;i<a;i++){
-        if(date[3][i]!=date[3][i+1]){
-            s=i+1;
-        }
-    }
-    max=0;
-    for(i=0;i<s;i++){
-        if(max<t[2][i]){
-            max=t[2][i];
-            d=i;
-        }
-        printf("%d\n",t[2][i]);
-    }
-    printf("r is %d\n",r);
-    for(i=1;i<d;i++){
-        if(date[2][i]!=date[2][i+1]){
-            f=i+1;
-        }
-        printf("%d\n",date[1][i]);
-    }
-    max=0;
-    for(i=0;i<f;i++){
-        if(max<t[1][i]){
-            max=t[1][i];
-            g=i;
-            
-        }
-        //printf("%d qwe %d\n",t[1][i],i);
-    }
-    //printf("%d",g);
-    for(i=0;i<g;i++){
-        if(date[1][i]!=date[1][i+1]){
-            h=i+1;
-        }
-    }
-    printf("r is %d\n",r);
-    if(h==1){
-        h=0;
-    }
-    printf("date is %d %d %d %d %d %d\n",h+1,g+1,f+1,d+1,s+1,a+1);
+     
     return t[k][size-1];
 }
 
-void data(int ** t,int **date,int size,int r){
-    int j=size;
-    int* array;
-    array=malloc(sizeof(int)*r);
-    int i;
-    int k;
-    i=r;
-    int max=0;
-    for(i=0;i<size;i++){
-        if(max<t[2][i]){
-            max=t[2][i];
-            array[k]=i;
-        }
-    }
-    k++;
-    for(i=0;i<array[k];i++){
-        if(date[2][i]!=date[2][i+1]){
-            array[k]=i+1;
-        }
-    }
-        printf("date is %d %d\n",array[k-1],array[k]);
-}
 
 int main(int argc,char *argv[])
 {
     FILE *fp;
     char *file1;
-    file1 = argv[3];
+    file1 = argv[1];
     fp = fopen(file1,"r");
-    if(argc!=4){
+    if(argc!=2){
         
         exit(INCORRECT_NUMBER_OF_COMMAND_LINE_ARGUMENTS);
     }
@@ -227,24 +184,21 @@ int main(int argc,char *argv[])
     if(!fopen(file1,"r")){
         exit(FILE_FAILED_TO_OPEN);
     }
-    int *price_arr;
-    int r;
-    r=atoi(argv[1]);
-    int n;
-    n=atoi(argv[2]);
-    printf("%d %d",r,n);
+    int *array;
+    int r=100;
+    int n=9;
     int max,min;
-    price_arr=malloc(sizeof(int)*(n+1));
+    struct day day;
+    array=malloc(sizeof(int)*(r+1));
  
-    createArray(price_arr,fp);
+    createArray(array,fp);
     //day=findMax(array,n);
     //printf("%d\n%d\n",day.buy[0],day.sell[0]);
     //day=findMin(array,n);
     //printf("%d\n%d\n",day.buy[0],day.sell[0]);
     //day=findMax2(array,n);
     //printf("%d\n%d\n%d\n%d\n",day.buy[0],day.sell[0],day.buy[1],day.sell[1]);
-    max=maxProfit(r,price_arr,n);
+    max=maxProfit(2,array,n);
     printf("the max profit is %d",max);
-    free(price_arr);
     return 0;
 }
