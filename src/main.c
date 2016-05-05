@@ -229,9 +229,9 @@ int main(int argc,char *argv[])
     }
     int *price_arr;
     int r;
-    r=atoi(argv[1]);
+    r=atoi(argv[2]);
     int n;
-    n=atoi(argv[2]);
+    n=atoi(argv[1]);
     printf("%d %d",r,n);
     int max,min;
     price_arr=malloc(sizeof(int)*(n+1));
