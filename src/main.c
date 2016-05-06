@@ -166,7 +166,18 @@ int maxProfit(int k, int* prices, int size)
     return t[k][size-1];
 }
 
-
+int free_arr( int** arr , int s ) {
+	
+	int i = 0;
+	
+	for( i = 0; i < s; i++) {
+		free(arr[i]);
+	}
+	
+	free(arr);
+	
+	return 0;
+}
 int main(int argc,char *argv[])
 {
     FILE *fp;
