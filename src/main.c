@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../input_error.h"
+#include "input_error.h"
 #define MAX(a, b) (a)>(b)? (a):(b)
 
+void free_arr( int** arr , int s );
 void createArray(int *array,FILE *fp){
     int price;
     int i=0,j;
     while(!feof(fp)){
-        fscanf(fp,"%d",&price);
+        if(!fscanf(fp,"%d",&price))
+            exit(PARSING_ERROR_INVALID_FORMAT);
         array[i]=price;
         //printf("%d\n",array[i]);
         i++;
@@ -30,17 +32,29 @@ int maxProfit(int k, int* prices, int size)
         date[i] = (int*)malloc(sizeof(int)*size);
         memset(date[i], 0, sizeof(int)*size);
     }
-    if(size < 2)
+    if(size < 2){
+            printf("We need more input numbers");
+    
         return 0;
-   if(k > size/2) //when it's unlimited, it can be easily handled -> corner case;
-    {
-        int profit = 0;
-        for(int i=1; i < size; i++)
-            if(prices[i] > prices[i-1])
-                profit += prices[i]-prices[i-1];
-        return profit;
     }
-    int** t = (int**)malloc(sizeof(int*)*(k+1));
+    if(size==2||size==3){
+        k=1;
+    }
+    if(size==4||size==5)
+    {
+        k=2;
+    }
+    if(k > size/2) //when it's unlimited, it can be easily handled -> corner case;
+    {
+        k=3;
+    }
+    int room=k;
+    //printf("%d",k);
+    if(k==size/2){
+        k--;
+    }
+
+    int** t = (int**)malloc(sizeof(int*)*(room+1));
     for(int i = 0; i <= k; i++)
     {
         t[i] = (int*)malloc(sizeof(int)*size);
@@ -59,22 +73,22 @@ int maxProfit(int k, int* prices, int size)
         }
         counter++;
     }
-    for(i=0;i<k+1;i++){
-        for(j=0;j<size;j++){
-            
-            printf("%d  ",t[i][j]);
-        }
-        printf("\n");
-    }
-    for(i=0;i<k+1;i++){
-        for(j=0;j<size;j++){
-            
-            printf("date array %d  ",date[i][j]);
-        }
-        printf("\n");
-    }
     int max=0;
-    int min=-99999;
+    if(k==1){
+    for(i=0;i<k+1;i++){
+        for(j=0;j<size;j++){
+            
+            //printf("%d  ",t[i][j]);
+        }
+        //printf("\n");
+    }
+    for(i=0;i<k+1;i++){
+        for(j=0;j<size;j++){
+            
+            //printf("date array %d  ",date[i][j]);
+        }
+        //printf("\n");
+    }
     int z=1,x=size;
     for(i=0;i<size;i++){
         if(max<t[1][i]){
@@ -92,9 +106,12 @@ int maxProfit(int k, int* prices, int size)
         z=0;
     }
 
-    printf("date is %d %d\n",z+1,x+1);
+    printf("%d\n%d\n",z+1,x+1);
+    
     if(t[k][size-1]==0)
     printf("there is no result");
+    }
+    else if(k==2){
     for(i=0;i<size;i++){
         if(max<t[2][i]){
             max=t[2][i];
@@ -112,20 +129,22 @@ int maxProfit(int k, int* prices, int size)
             max=t[1][i];
             e=i;
         }
-        printf("%d\n",t[1][i]);
+       // printf("%d\n",t[1][i]);
     }
-    printf("r is %d\n",r);
+    //printf("r is %d\n",r);
     for(i=1;i<w-1;i++){
         if(date[1][i]!=date[1][i+1]){
             r=i+1;
         }
-        printf("%d\n",date[1][i]);
+        //printf("%d\n",date[1][i]);
     }
-    printf("r is %d\n",r);
+    //printf("r is %d\n",r);
     if(r==1){
         r=0;
     }
-    printf("date is %d %d %d %d",q+1,w+1,e+1,r+1);
+    printf("%d\n%d\n%d\n%d\n",r+1,e+1,w+1,q+1);
+    }
+    else if(k==3){
     for(i=0;i<size;i++){
         if(max<t[3][i]){
             max=t[3][i];
@@ -137,7 +156,7 @@ int maxProfit(int k, int* prices, int size)
             s=i+1;
         }
     }
-        printf("s is %d",s);
+        //printf("s is %d",s);
     for(i=0;i<size;i++){
         if(max<t[3][i]){
             max=t[3][i];
@@ -155,14 +174,14 @@ int maxProfit(int k, int* prices, int size)
             max=t[2][i];
             d=i;
         }
-        printf("%d\n",t[2][i]);
+        //printf("%d\n",t[2][i]);
     }
-    printf("r is %d\n",r);
+    //printf("r is %d\n",r);
     for(i=1;i<d;i++){
         if(date[2][i]!=date[2][i+1]){
             f=i+1;
         }
-        printf("%d\n",date[1][i]);
+        //printf("%d\n",date[1][i]);
     }
     max=0;
     for(i=0;i<f;i++){
@@ -179,14 +198,19 @@ int maxProfit(int k, int* prices, int size)
             h=i+1;
         }
     }
-    printf("r is %d\n",r);
+    //printf("r is %d\n",r);
     if(h==1){
         h=0;
     }
-    printf("date is %d %d %d %d %d %d\n",h+1,g+1,f+1,d+1,s+1,a+1);
+    printf("%d\n%d\n%d\n%d\n%d\n%d\n",h+1,g+1,f+1,d+1,s+1,a+1);
+    }
+    //free(*date,size);
+    //free(*t,size);
+    
+
     return t[k][size-1];
 }
-int free_arr( int** arr , int s ) {
+void free_arr( int** arr , int s ) {
 	
 	int i = 0;
 	
@@ -195,37 +219,17 @@ int free_arr( int** arr , int s ) {
 	}
 	
 	free(arr);
-	
-	return 0;
+
 }
-void data(int ** t,int **date,int size,int r){
-    int j=size;
-    int* array;
-    array=malloc(sizeof(int)*r);
-    int i;
-    int k;
-    i=r;
-    int max=0;
-    for(i=0;i<size;i++){
-        if(max<t[2][i]){
-            max=t[2][i];
-            array[k]=i;
-        }
-    }
-    k++;
-    for(i=0;i<array[k];i++){
-        if(date[2][i]!=date[2][i+1]){
-            array[k]=i+1;
-        }
-    }
-        printf("date is %d %d\n",array[k-1],array[k]);
-}
+
 int main(int argc,char *argv[])
 {
     FILE *fp;
     char *file1;
     file1 = argv[3];
     fp = fopen(file1,"r");
+        if(fp==NULL)
+        exit(PARSING_ERROR_EMPTY_FILE);
     if(argc!=4){
         
         exit(INCORRECT_NUMBER_OF_COMMAND_LINE_ARGUMENTS);
@@ -242,19 +246,17 @@ int main(int argc,char *argv[])
     r=atoi(argv[2]);
     int n;
     n=atoi(argv[1]);
-    printf("%d %d",r,n);
+    //printf("%d %d",r,n);
     int max,min;
     price_arr=malloc(sizeof(int)*(n+1));
  
     createArray(price_arr,fp);
-    //day=findMax(array,n);
-    //printf("%d\n%d\n",day.buy[0],day.sell[0]);
-    //day=findMin(array,n);
-    //printf("%d\n%d\n",day.buy[0],day.sell[0]);
-    //day=findMax2(array,n);
-    //printf("%d\n%d\n%d\n%d\n",day.buy[0],day.sell[0],day.buy[1],day.sell[1]);
     max=maxProfit(r,price_arr,n);
-    printf("the max profit is %d",max);
+    //printf("the max profit is %d\n",max);
     free(price_arr);
+    fclose(fp);
+        if(!fclose(fp)){
+        exit(FILE_FAILED_TO_CLOSE);
+    }
     return 0;
 }
